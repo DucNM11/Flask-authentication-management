@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, Response, request
+from flask import Blueprint, render_template, Response, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from . import db
 from .data_model import Insight
@@ -26,12 +26,16 @@ def profile():
 def profile_post():
     """POST method to get request from customer to return requested data on profile detail page
     """
-    slug = request.form.get("slug")
-    data = Insight.query.filter_by(slug=slug).first()
+    symbol = request.form.get("symbol")
+    data = Insight.query.filter_by(symbol=symbol).first()
+
+    if data is None:
+        flash("Data on this cryptocurrency is unavailable")
+        return redirect(url_for("main.profile"))
 
     return render_template(
         "profile_detail.html",
-        symbol=data.symbol,
+        slug=data.slug.replace('\'', ''),
         num_market_pairs=data.num_market_pairs,
         date_added=data.date_added,
         cmc_rank=data.cmc_rank,

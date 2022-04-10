@@ -1,7 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="title">
-  Welcome, {{user_name}}!
-</h1>
+<div class="column is-4 is-offset-4">
+  <hz class="title">
+    Welcome, {{user_name}}!
+    <div class="box">
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+          <div class="notification is-danger">
+              {{ messages[0] }}.
+          </div>
+      {% endif %}
+      {% endwith %}
+      <form method="POST" action="/profile">
+          <div class="field">
+              <div class="control">
+                  <input class="input is-large" name="symbol" placeholder="Request data for: (E.g: BTC, ETH...)" autofocus="">
+              </div>
+          </div>
+    </div>
+  </h1>
+</div>
 {% endblock %}
