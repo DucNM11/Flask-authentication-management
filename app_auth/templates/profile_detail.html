@@ -2,7 +2,66 @@
 
 {% block content %}
 <h1 class="title">
-  DATA, {{slug,num_market_pairs,date_added,cmc_rank,last_updated,quote_GBP_price,quote_GBP_volume_24h,quote_GBP_volume_change_24h,quote_GBP_percent_change_1h,quote_GBP_percent_change_24h,sentiment,popularity}}!
+  <table class="styled-table">
+    <thead>
+        <tr>
+            <th>Info</th>
+            <th>Detail</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="active-row">
+            <td>Full name of the crypto</td>
+            <td>{{slug}}</td>
+        </tr>
+        <tr class="active-row">
+            <td>Number of market pairs</td>
+            <td>{{num_market_pairs}}</td>
+        </tr>
+        <tr class="active-row">
+            <td>Date added</td>
+            <td>{{date_added}}</td>
+        </tr>
+        <tr class="active-row">
+            <td>Cmc rank</td>
+            <td>{{cmc_rank}}</td>
+        </tr>
+        <tr class="active-row">
+            <td>Last updated</td>
+            <td>{{last_updated}}</td>
+        </tr>
+        <tr class="active-row">
+            <td>GBP price</td>
+            <td>{{quote_GBP_price}}</td>
+        </tr>
+        <tr class="active-row">
+            <td>GBP volume 24h</td>
+            <td>{{quote_GBP_volume_24h}}</td>
+        </tr>
+        <tr class="active-row">
+            <td>GBP volume change 24h</td>
+            <td>{{quote_GBP_volume_change_24h}}</td>
+        </tr>
+        <tr class="active-row">
+            <td>GBP percent change 1h</td>
+            <td>{{quote_GBP_percent_change_1h}}%</td>
+        </tr>
+        <tr class="active-row">
+            <td>GBP percent change 24h</td>
+            <td>{{quote_GBP_percent_change_24h}}%</td>
+        </tr>
+        <tr class="active-row">
+            <td>Sentiment</td>
+            <td>{{sentiment}}</td>
+        </tr>
+        <tr class="active-row">
+            <td>Popularity</td>
+            <td>{{popularity}}</td>
+        </tr>
+        <!-- and so on... -->
+    </tbody>
+</table>
+
 </h1>
 {% endblock %}
 
