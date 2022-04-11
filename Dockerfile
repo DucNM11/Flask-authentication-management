@@ -13,5 +13,5 @@ RUN apk --no-cache update \
 ENV FLASK_APP=app_auth
 ENV FLASK_DEBUG=1
 
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=80", "--cert=adhoc"]
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=80", "--cert=cert.pem", "--key=key.pem"]
 EXPOSE 80
