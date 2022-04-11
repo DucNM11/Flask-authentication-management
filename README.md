@@ -216,6 +216,8 @@ app.config["SECRET_KEY"] = env_config.get("SECRET_KEY")
 app.config[
     "SQLALCHEMY_DATABASE_URI"] = f'mysql+mysqldb://root:{PASSWORD}@{PUBLIC_IP_ADDRESS}/{DBNAME}?unix_socket=/cloudsql/{PROJECT_ID}:{INSTANCE_NAME}'
 ````
+Furthermore, to add one more security layer on top of role-based policies from our database. We utilized the GCP function on connections management, even with the right authentication information for the service account, the client VM instance needs to be in the authorized IP list to access our database. For this to work, this required a setup for a static IP from GCP Compute Engine Service. This security feature could be further developed into the GCP's IAM method in our future work for scalability. 
+![image](https://user-images.githubusercontent.com/14797495/162697839-de1d8eae-c782-4582-9aa2-ed2e148f9337.png)
 
 ## 5. Scalability
 Developing this app with a mindset for it to be easily scaled out, we developed a docker image to ensure its required environments no matter which platforms.
