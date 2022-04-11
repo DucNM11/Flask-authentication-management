@@ -6,7 +6,103 @@ Crypto Summariser is an API which provides users a secure way of accessing a uni
 ![arch](https://user-images.githubusercontent.com/37650605/162621233-fa1fcb96-ce28-469e-81b4-0aa590e137ec.jpeg)
 
 ## 1. Dynamically REST API
-The Crypto Summariser aims to provide the user with a sufficient range of APIs for their needs. At the moment, we have implemented 5 APIs that cover all the CRUD operations from creating a new user, reading info to authenticate the current user, updating their password, and deleting the current user. This data is hashed and stored on a Cloud SQL instance, ready to serve to the user. 
+The Crypto Summariser aims to provide the user with a sufficient range of APIs for their needs. At the moment, we have implemented 5 APIs that cover all the CRUD operations from creating a new user, reading info for authenticating the current user/providing them with our summarized data, updating their password, and deleting the current user. This data is hashed and stored on a Cloud SQL instance, ready to serve to the user. 
+
+#### Create operation - dynamically gets data from the form and feedbacks to the customer about their input
+```
+@auth.route("/signup", methods=["POST"])
+def signup_post():
+    """POST method to get customer's information from the form to check for duplication
+    and sign up
+    
+    # Dynamically getting customer's information from the front end
+    # Get required data from the form
+    email = request.form.get("email")
+    name = request.form.get("name")
+    password = request.form.get("password")
+
+    # Check for duplication
+    user = User.query.filter_by(email=email).first()
+
+    # Notify customer if the email is already registered
+    if user:
+        flash("Email already exists")
+        return redirect(url_for("auth.signup"))
+```
+#### Reading operation - dynamically gets data from the form and feedbacks to the customer about their input
+```
+@auth.route("/login", methods=["POST"])
+def login_post():
+    """POST method to get input data from customer for authentication
+    """
+    # Get required data from the form
+    email = request.form.get("email")
+    password = request.form.get("password")
+    remember = True if request.form.get("remember") else False
+
+    # Check for duplication
+    user = User.query.filter_by(email=email).first()
+
+    # Notify customer if the authentication step is fail
+    if not user or not check_password_hash(user.password, password):
+        flash('Please check your login detail and try again.')
+        return redirect(url_for("auth.login"))
+
+    # Authentication step is successful, redirect to the user's profile page
+    login_user(user, remember=remember)
+    return redirect(url_for("main.profile"))
+```
+#### Update operation - dynamically gets data from the form and feedbacks to the customer about their input
+````
+@main.route("/reset_pwd", methods=["POST"])
+@login_required
+def reset_pwd_post():
+    """ To reset user password detail from the mysql db
+    """
+    if request.method == "POST":
+        newpwd = request.form["newpwd"]
+        newpwd2 = request.form["newpwd2"]
+        if newpwd != newpwd2:
+            flash("Re-type Password")
+            return redirect(url_for("main.reset_pwd"))
+        email = current_user.email
+        new_password = generate_password_hash(newpwd2, method="sha256")
+        result = User.query.filter(User.email==email).update({"password": new_password})
+        db.session.commit()
+        if not result:
+            flash("Password update failed. Try Again!!")
+            return redirect(url_for("main.reset_pwd"))
+        else:
+            flash("Update Successful")
+            return render_template("login.html")
+    return render_template("reset_pwd.html")
+````
+
+#### Delete operation - dynamically gets data from the form and feedbacks to the customer about their input
+````
+@main.route("/delete_user", methods=["POST"])
+@login_required
+def delete_user_post():
+    """ To delete user details from the mysql db
+    """
+    if request.method == "POST":
+        pwd = request.form["pwd"]
+
+        user = User.query.filter_by(email=current_user.email).first()
+        db.session.commit()
+        if not user or not check_password_hash(user.password, pwd):
+            flash('Please check your login detail and try again.')
+            return redirect(url_for("main.delete_user"))
+        else:
+            result = User.query.filter_by(email=current_user.email).delete()
+            db.session.commit()
+            if not result:
+                flash("User deletion failed. Try Again!!")
+                return redirect(url_for("main.delete_user"))
+            else:
+                return render_template("index.html")
+    return render_template("delete_user.html")
+````
 
 ## 2. External APIs
 The Crypto Summariser aims to consolidate information from multiple external sources and provide it to the user in a single call. At the moment, we have implemented two data sources using the CoinMarketCap and Twitter public APIs. This data is collected and pushed to a Cloud SQL instance, ready to serve to the user. 
