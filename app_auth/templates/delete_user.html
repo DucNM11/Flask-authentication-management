@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="notification is-danger">
+        {{ messages[0] }}
+    </div>
+{% endif %}
+{% endwith %}
+<form method="POST" action="/delete_user">
+        <div class="field">
+            <div class="control">
+                <input class="input is-medium" type="password" name="pwd" placeholder="Enter Password to delete User Details !!" autofocus="">
+            </div>
+        </div>
+        <button class="button is-rounded is-danger is-medium is-fullwidth">Delete</button>
+</form>
+{% endblock %}
