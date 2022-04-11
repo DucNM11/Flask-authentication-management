@@ -54,12 +54,15 @@ def get_data():
             'date_added',
             'cmc_rank',
             'last_updated',
-            'quote_GBP_price',
-            'quote_GBP_volume_24h',
-            'quote_GBP_volume_change_24h',
-            'quote_GBP_percent_change_1h',
-            'quote_GBP_percent_change_24h',
+            'quote.GBP.price',
+            'quote.GBP.volume_24h',
+            'quote.GBP.volume_change_24h',
+            'quote.GBP.percent_change_1h',
+            'quote.GBP.percent_change_24h'
         ]]
+        
+        print(df.columns)    
+        df.columns = ['id','name','symbol','slug','num_market_pairs','date_added','cmc_rank','last_updated','quote_GBP_price','quote_GBP_volume_24h','quote_GBP_volume_change_24h','quote_GBP_percent_change_1h','quote_GBP_percent_change_24h']
         for idx, row in df.iterrows():
             try:
                 starttime = datetime.datetime.now() - datetime.timedelta(hours = 2)
