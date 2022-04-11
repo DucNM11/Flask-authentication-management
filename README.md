@@ -1,8 +1,11 @@
 # Cloud Computing Mini Project ECS781P
+## Group 25 - Crypto Summariser
+
+Crypto Summariser is an API which provides users a secure way of accessing a unified source of information about crypto coins. Users can sign up for an account, which is protected by SHA256 hashed authentication, and once authenticated can query up-to-date information on the current top cryptocoins over https. The information is collected from the CoinMarketCap and Twitter external APIs and where it is stored in a Cloud SQL database in order to be quickly queried by the user. 
 
 ![arch](https://user-images.githubusercontent.com/37650605/162621233-fa1fcb96-ce28-469e-81b4-0aa590e137ec.jpeg)
 
-# External APIs
+## External APIs
 The Crypto Summariser aims to consolidate information from multiple external sources and provide it to the user in a single call. At the moment, we have implemented two data sources using the CoinMarketCap and Twitter public APIs. This data is collected and pushed to a Cloud SQL instance, ready to serve to the user. 
 
 We start by querying the top 20 coins, by current market cap, from the CoinMarketCap API where we retrieve the coin metadata:(symbol, name, rank etc.) as well as some basic financial infomration: ['quote_GBP_price','quote_GBP_volume_24h','quote_GBP_volume_change_24h','quote_GBP_percent_change_1h','quote_GBP_percent_change_24h'].
