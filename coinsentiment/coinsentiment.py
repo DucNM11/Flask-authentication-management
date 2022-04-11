@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import tweepy
 import sys
 import datetime
@@ -44,7 +46,8 @@ def searchtweets(client, starttime, searchstring):
             tokens = nltk.tokenize.word_tokenize(tweet.text)
             tokens_cleaned = [word for word in tokens if word.isalpha()]
             tokens_cleaned = [
-                word for word in tokens_cleaned if word.lower() not in stopwords
+                word for word in tokens_cleaned
+                if word.lower() not in stopwords
             ]
             tweet.text = (" ").join(tokens_cleaned)
 
@@ -55,7 +58,7 @@ def getaveragesentiment(tweets):
     """for a list of tweets, get the average sentiment of each 
         tweet. 
     """
-    
+
     tweetsentiment = 0
     sia = SentimentIntensityAnalyzer()
     for tweet in tweets:
