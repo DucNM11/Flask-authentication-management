@@ -7,15 +7,29 @@ The Crypto Summariser aims to consolidate information from multiple external sou
 
 We start by querying the top 20 coins, by current market cap, from the CoinMarketCap API where we retrieve the coin metadata:(symbol, name, rank etc.) as well as some basic financial infomration: ['quote_GBP_price','quote_GBP_volume_24h','quote_GBP_volume_change_24h','quote_GBP_percent_change_1h','quote_GBP_percent_change_24h'].
 
-With this list of top coins, we additionaly use the Twitter API to get the current sentiment and popularity of the coin. This is implemented by retrieving the latest 100 tweets which mention the coin's name:
+With this list of top coins, we additionaly use the Twitter API to get the current sentiment and popularity of the coin. This is implemented by first retrieving the latest 100 tweets which mention the coin's name, filter for english-only tweets, remove stopwords:
 ```
 response = client.search_recent_tweets(
         searchstring,
         max_results=100,
     )
     tweets = response.data
+    # cleaning:
+    stopwords = nltk.corpus.stopwords.words("english")
+    for tweet in tweets:
+        if detect(tweet.text) != "en":
+            tweets.remove(tweet)
+        else:
+            tokens = nltk.tokenize.word_tokenize(tweet.text)
+            tokens_cleaned = [word for word in tokens if word.isalpha()]
+            tokens_cleaned = [
+                word for word in tokens_cleaned if word.lower() not in stopwords
+            ]
+            tweet.text = (" ").join(tokens_cleaned)
+
+    return tweets
 ```
-We then filter for english-only tweets, remove stopwords and perform some basic sentiment analysis, using the NLTK library, to get a current average sentiment:
+We then perform some basic sentiment analysis, using the NLTK library, to get a current average sentiment:
 
 ```
 def getaveragesentiment(tweets):
@@ -34,7 +48,14 @@ def getaveragesentiment(tweets):
     return tweetsentiment
 ```
 
-Additionally, we compute a popiarity score, which is a measure of the frequency of Tweets - the inverse of the amount of time between the 1st and 100th most recent Tweets. This is then normalised by the frequency of bitcoin tweets, such that values over 1 are being tweeted about more frequently that bitcoin, and below 1 is less frequently.
+Additionally, we compute a popiarity score, which is a measure of the frequency of Tweets - the inverse of the amount of time between the 1st and 100th most recent Tweets. This is then normalised by the frequency of bitcoin tweets, such that values over 1 are being tweeted about more frequently that bitcoin, and below 1 is less frequently:
+
+```
+    btc_popularity = 1 / (btc_tweets[0].id - btc_tweets[-1].id)
+    popularity = (1 / (tweets[0].id - tweets[-1].id)) / btc_popularity
+
+    return popularity
+```
 
 Once the table has been populated with both sources of info, it is pushed to the cloud sql instance, ready to be served to the user of our Crypto Summariser app. In this proof of concept, we have simply run the code in advance to populate the table in the database, however in production we would run this as a cron job e.g. every 5 mins to provide the most up-to-date info to the user:
 
