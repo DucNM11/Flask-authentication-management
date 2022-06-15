@@ -1,1 +1,1 @@
-5 * * * * ./coinmarketapi.py
+*/5 * * * * ./coinmarketapi.py
