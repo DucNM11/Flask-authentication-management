@@ -162,7 +162,7 @@ Additionally, we compute a popiarity score, which is a measure of the frequency 
 Once the table has been populated with both sources of info, it is pushed to the cloud sql instance, ready to be served to the user of our Crypto Summariser app. In this proof of concept, we have simply run the code in advance to populate the table in the database, however in production we would run this as a cron job e.g. every 5 mins to provide the most up-to-date info to the user:
 
 ```
-5 * * * * ./coinmarketapi.py
+*/5 * * * * ./coinmarketapi.py
 ````
 
 ## 3. Cloud database for accessing persistent information
